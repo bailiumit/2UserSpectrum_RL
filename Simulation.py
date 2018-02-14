@@ -48,20 +48,20 @@ class Simulation:
         if Q_tt == 0:
             if self.a_t == 0:
                 self.f_t = 'I'
-                self.r_t = -1
+                self.r_t = 0
             else:
                 self.f_t = 'S'
-                self.r_t = 5
-            self.o_t = 1
+                self.r_t = 1
+            self.o_t = 0
             self.Q_t = Q_tt
         else:
             if self.a_t == 0:
                 self.f_t = 'S'
-                self.o_t = 0
+                self.o_t = 1
                 self.Q_t = np.array([Q_tt - 1, 0]).max()
                 self.r_t = 0
             else:
                 self.f_t = 'C'
                 self.o_t = 2
                 self.Q_t = Q_tt
-                self.r_t = -2
+                self.r_t = 0

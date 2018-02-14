@@ -1,11 +1,12 @@
 import numpy as np
 
 
-A = np.array([[1, 0, 0]])
-B = np.tile([[1, 0, 0]], (1, 3))
-C = [[1, 2, 3]]
+A = np.array([[1, 0, 1]])
+B = np.array([[1, 0, 0], [1, 2, 3], [4, 5, 6]])
+C = B[np.nonzero(A>0)[1], :]
+D = np.nonzero(A>0)
 
-print(-B[0, 0])
+print(C)
 
 # predY = np.array([[0.3, 0.7], [0.6, 0.4]])
 # trueY = np.array([[0, 3], [1, 10]])
