@@ -48,10 +48,10 @@ class Simulation:
         if Q_tt == 0:
             if self.a_t == 0:
                 self.f_t = 'I'
-                self.r_t = 0
+                self.r_t = -1
             else:
                 self.f_t = 'S'
-                self.r_t = 1
+                self.r_t = 5
             self.o_t = 0
             self.Q_t = Q_tt
         else:
@@ -64,4 +64,4 @@ class Simulation:
                 self.f_t = 'C'
                 self.o_t = 2
                 self.Q_t = Q_tt
-                self.r_t = 0
+                self.r_t = -2

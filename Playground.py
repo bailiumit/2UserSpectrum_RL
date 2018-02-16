@@ -1,81 +1,86 @@
+from multiprocessing import Pool, Array
 import numpy as np
+import time
 
+systemParaDict = {}
+systemParaDict['bufferSize'] = 10000
+systemParaDict['arrivalRate'] = 0.4
 
-A = np.array([[1, 0, 1]])
-B = np.array([[1, 0, 0], [1, 2, 3], [4, 5, 6]])
-C = B[np.nonzero(A>0)[1], :]
-D = np.nonzero(A>0)
+T = 10
 
-print(C)
+X = np.zeros((T, 2))
 
-# predY = np.array([[0.3, 0.7], [0.6, 0.4]])
-# trueY = np.array([[0, 3], [1, 10]])
-# s = np.sum(
-#     np.log(np.abs(trueY[:, 0] - predY[:, 0])) * trueY[:, 1])
+def f(x):
+    print(x)
+    return np.array([[x**2, x**2+1], [x**2+2, x**2+3]]), np.array([[-x**2, -x**2-1], [-x**2-2, -x**2-3]])
 
-# print('Result: ', s)
+# if __name__ == '__main__':
+def PMain():
+    p = Pool(4)
+    output = p.map(f, range(T))
 
+    A = np.hstack(output)
+    B = A[0]
+    C = A[1]
+    print(B)
 
-# import keras.backend as K
+# for i in range(100000000):
+#     print(i)
+
+# import keras
+# from keras.models import Sequential
+# from keras.layers import Dense, Dropout, Activation
+# from keras.optimizers import SGD
+
+# # Generate dummy data
 # import numpy as np
 
-# W1_ = np.array([[1, 2], [3, 4], [5, 60]])
-# W2_ = np.array([[7], [8]])
-# dW1 = np.array([[1, 2], [3, 4], [5, -60]])
+# model = Sequential()
+# model.add(Dense(30, activation='relu', input_dim=20))
+# model.add(Dense(2, activation='softmax'))
+# sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+# model.compile(loss=PG,
+#       optimizer=sgd]) 
 
-# # W1 = K.variable(W1_)
-# # W2 = K.variable(W2_)
-# X = K.placeholder()
+# for i in range(M)
+#     for j in range(N)
+#         sample = Generate()
+#         actionset = predict(sample)
+#         x = x.append(sample)
+#         y = -CalY(actionset, x)
 
-# W1 = K.variable(W1_+dW1)
-# X_ = np.array([[-0.1, -0.2, 0.1]])
-
-# Y = K.dot(K.relu(K.dot(X, W1)), W2)
-# fn = K.function([X], K.gradients(Y, [W2]))
-
-# X_ = np.array([[-0.1, -0.2, 0.1]])
-
-
-# W1 = K.placeholder()
-# W2 = K.placeholder()
-
-
-# for i in range(1):
-#     print(fn([X_]))
+#     model.fit(x, y,
+#             epochs=1,
+#             batch_size=N*T) # size of x
 
 
 
-# model = {}
-# model['A'] = np.random.randn(2, 3)
-# B = np.random.randn(10)
 
-# A = []
-# H = []
-# for i in range(5):
-#     A.append(i)
-#     H.append(np.random.randn(5, 1))
+# def PG:
 
-# epA = np.vstack(A)
-# epH = np.vstack(H)
 
-# # print(B.shape)
-# # print(np.dot(epH.T, epA).ravel())
 
-# H = 15
-# D = 30
 
-# W1 = np.random.randn(H, D)
-# W2 = np.random.randn(H)
 
-# x = np.ones((D, 1))
 
-# h = np.dot(W1, x)
-# logp = np.dot(W2, h)
+# x_train = np.random.random((1000, 20))
+# y_train = keras.utils.to_categorical(np.random.randint(10, size=(1000, 1)), num_classes=10)
+# x_test = np.random.random((100, 20))
+# y_test = keras.utils.to_categorical(np.random.randint(10, size=(100, 1)), num_classes=10)
 
-# h2 = np.dot(W1, x)
+# model = Sequential()
+# # Dense(64) is a fully-connected layer with 64 hidden units.
+# # in the first layer, you must specify the expected input data shape:
+# # here, 20-dimensional vectors.
+# model.add(Dense(30, activation='relu', input_dim=20))
+# model.add(Dense(2, activation='softmax'))
 
-# hs = []
-# hs.append(h)
-# hs.append(h2)
+# sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+# model.compile(loss='categorical_crossentropy',
+#               optimizer=sgd,
+#               metrics=['accuracy'])
 
-# print(np.hstack(hs))
+# model.fit(x_train, y_train,
+#           epochs=1,
+#           batch_size=) # size of x
+# score = model.evaluate(x_test, y_test, batch_size=128)
