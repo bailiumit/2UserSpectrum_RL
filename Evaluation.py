@@ -2,6 +2,9 @@
 from PGNN import *
 from multiprocessing import Pool, cpu_count
 import matplotlib.pyplot as plt
+import time
+import csv
+import os
 
 
 class Evaluation:
@@ -18,17 +21,34 @@ class Evaluation:
         print('==========')
         print('# of CPUs: ', cpu_count())
         print('==========')
-        # evaluate results using parallel methods
+        # evaluate results using parallel smethods
         paraProcess = Pool(cpu_count())
         self.simREINFORCE_H2 = paraProcess.map(
             self.SimREINFORCE_H2, range(100))
         self.originLowerBound = paraProcess.map(self.CalLowerBound, range(100))
         self.originUpperBound = paraProcess.map(self.CalUpperBound, range(100))
         # plot results
-        plt.plot(self.simREINFORCE_H2)
-        plt.plot(self.originLowerBound)
-        plt.plot(self.originUpperBound)
-        plt.show()
+        fig, ax = plt.subplots()
+        xAxis = np.arange(0.0, 1.0, 0.01)
+        ax.plot(xAxis, self.simREINFORCE_H2)
+        ax.plot(xAxis, self.originLowerBound)
+        ax.plot(xAxis, self.originUpperBound)
+        ax.set(xlabel='$\lambda$', ylabel='$\mu^*$')
+        ax.grid()
+        # plt.show()
+        # save results to files
+        fileName = 'H' + str(self.PGNNParaDict['historyLength']) +\
+                   '_R' + str(self.PGNNParaDict['hiddenNeuronNum']) +\
+                   '_N' + str(self.PGNNParaDict['batchSize']) +\
+                   '_M' + str(self.PGNNParaDict['iterationTime'])
+        os.chdir('Results')
+        with open(fileName + '.csv', "w") as file:
+            writer = csv.writer(file, delimiter=',')
+            writer.writerow(self.simREINFORCE_H2)
+            writer.writerow(self.originLowerBound)
+            writer.writerow(self.originUpperBound)
+        fig.savefig(fileName + '.eps')
+        os.chdir('..')
 
     # simulate the result of H = 2 when applying REINFORCE
     def SimREINFORCE_H2(self, x):

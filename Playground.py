@@ -1,28 +1,37 @@
-from multiprocessing import Pool, Array
-import numpy as np
-import time
+import csv
 
-systemParaDict = {}
-systemParaDict['bufferSize'] = 10000
-systemParaDict['arrivalRate'] = 0.4
+float_list = [1.13, 0.25, 3.28]
 
-T = 10
+with open('a.csv', "w") as file:
+    writer = csv.writer(file, delimiter=',')
+    writer.writerow(float_list)
 
-X = np.zeros((T, 2))
 
-def f(x):
-    print(x)
-    return np.array([[x**2, x**2+1], [x**2+2, x**2+3]]), np.array([[-x**2, -x**2-1], [-x**2-2, -x**2-3]])
+# from multiprocessing import Pool, Array
+# import numpy as np
+# import time
 
-# if __name__ == '__main__':
-def PMain():
-    p = Pool(4)
-    output = p.map(f, range(T))
+# systemParaDict = {}
+# systemParaDict['bufferSize'] = 10000
+# systemParaDict['arrivalRate'] = 0.4
 
-    A = np.hstack(output)
-    B = A[0]
-    C = A[1]
-    print(B)
+# T = 10
+
+# X = np.zeros((T, 2))
+
+# def f(x):
+#     print(x)
+#     return np.array([[x**2, x**2+1], [x**2+2, x**2+3]]), np.array([[-x**2, -x**2-1], [-x**2-2, -x**2-3]])
+
+# # if __name__ == '__main__':
+# def PMain():
+#     p = Pool(4)
+#     output = p.map(f, range(T))
+
+#     A = np.hstack(output)
+#     B = A[0]
+#     C = A[1]
+#     print(B)
 
 # for i in range(100000000):
 #     print(i)

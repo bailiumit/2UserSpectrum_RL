@@ -3,9 +3,6 @@ from Simulation import *
 from PGNN import *
 from Evaluation import *
 
-from Playground import *
-
-
 # set system parameters
 systemParaDict = {}
 systemParaDict['bufferSize'] = 10000
@@ -15,9 +12,9 @@ systemParaDict['arrivalRate'] = 0.4
 PGNNParaDict = {}
 PGNNParaDict['historyLength'] = 1  # number of hidden layer neurons
 PGNNParaDict['hiddenNeuronNum'] = 1  # number of hidden layer neurons
-PGNNParaDict['timeslotNum'] = 10  # number of hidden layer neurons
-PGNNParaDict['batchSize'] = 1  # every how many episodes to do a param update
-PGNNParaDict['iterationTime'] = 1
+PGNNParaDict['timeslotNum'] = 100  # number of hidden layer neurons
+PGNNParaDict['batchSize'] = 100  # every how many episodes to do a param update
+PGNNParaDict['iterationTime'] = 200
 PGNNParaDict['dicountFactor'] = 0.99  # discount factor for reward
 
 # PGNNObj = PGNN(systemParaDict, PGNNParaDict)
@@ -25,4 +22,5 @@ PGNNParaDict['dicountFactor'] = 0.99  # discount factor for reward
 
 # PMain()
 
-EvalObj = Evaluation(systemParaDict, PGNNParaDict)EvalObj.Main()
+EvalObj = Evaluation(systemParaDict, PGNNParaDict)
+EvalObj.Main()
