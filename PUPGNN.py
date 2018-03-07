@@ -8,11 +8,11 @@ from keras.layers import Dense
 from Simulation import *
 
 
-class PGNN:
+class PUPGNN:
 
     # initialization
     def __init__(self, systemParaDict, PGNNParaDict):
-        self.L = PGNNParaDict['historyLength'] - 1  # historyLength
+        self.L = PGNNParaDict['historyLength']  # historyLength
         self.H = PGNNParaDict['hiddenNeuronNum']  # hiddenNeuronNum
         self.T = PGNNParaDict['timeslotNum']  # timeslotNum
         self.N = PGNNParaDict['batchSize']  # batchSize
@@ -27,11 +27,21 @@ class PGNN:
     def Main(self):
         # construct neural network model
         model = Sequential()
-        model.add(Dense(self.H, activation='relu', input_dim=3 * self.L))
-        model.add(Dense(1, activation='sigmoid'))
-        opt = Opt.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+        # model.add(Dense(self.H, activation='relu', input_dim=3 * self.L))
+        # model.add(Dense(1, activation='sigmoid'))
+        # opt = Opt.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+        # model.compile(loss=self.PGLoss,
+        #               optimizer=opt)
+
+        testW = []
+        testW.append(np.array([[0], [0], [0], [0], [0], [0]]))
+        testW.append(np.array([0]))
+        model.add(Dense(1, activation='sigmoid', input_dim=3 * self.L,
+                  weights=testW))
+        opt = Opt.SGD(lr=1e-2, decay=1e-6, momentum=0.9, nesterov=True)
         model.compile(loss=self.PGLoss,
-                      optimizer=opt)
+                      optimizer=opt)        
+
         # optimize the policy by training neural network
         for i in range(self.M):
             # initialize variables
@@ -53,7 +63,6 @@ class PGNN:
             print('batch = ', i, ', ',
                   'mu_sim = ', curMuSim, ',',
                   'total time = ', time.time() - self.t_unit, 's')
-            # print(model.get_weights())
 
     # generate samples according to neural network
     def GenerateSamples(self, model):
@@ -68,29 +77,27 @@ class PGNN:
         # generate trainX
         for t in range(self.T):
             # decide which action to take
-            if preO == 0:
-                a_t = 1
-            elif preO == 1:
+            if preO == 2:
+                a_t = 0
+            else:
                 probA = model.predict(histO, batch_size=1)
                 if np.random.uniform() < probA[0, 0]:
                     a_t = 0
                 else:
                     a_t = 1
-            else:
-                a_t = 0
             # run simulation once
             simObj = Simulation(self.systemParaDict, a_t, Q_tm1)
             simObj.Main()
             curO = simObj.o_t
             # add o_t-1 into history
             newHistO = np.array([[0, 0, 0]])
-            newHistO[0, preO] = 1
+            newHistO[0, curO] = 1
             histO = np.hstack((histO[:, 3:], newHistO))
             # collect data
             fullX[t, :] = histO
             sampleA.append(a_t)
             sampleR.append(simObj.r_t)
-            if curO == 1:
+            if curO == 0 or curO == 1:
                 indexU[t, 0] = 1
             # update temporary variables
             preO = curO
@@ -126,23 +133,21 @@ class PGNN:
             Q_tm1 = 0
             for t in range(testHorizon):
                 # decide which action to take
-                if preO == 0:
-                    a_t = 1
-                elif preO == 1:
+                if preO == 2:
+                    a_t = 0
+                else:
                     probA = model.predict(histO, batch_size=1)
                     if np.random.uniform() < probA[0, 0]:
                         a_t = 0
                     else:
                         a_t = 1
-                else:
-                    a_t = 0
                 # run simulation once
                 simObj = Simulation(self.systemParaDict, a_t, Q_tm1)
                 simObj.Main()
                 curO = simObj.o_t
                 # add o_t-1 into history
                 newHistO = np.array([[0, 0, 0]])
-                newHistO[0, preO] = 1
+                newHistO[0, curO] = 1
                 histO = np.hstack((histO[:, 3:], newHistO))
                 # count successful times
                 if a_t == 1 and simObj.f_t == 'S':

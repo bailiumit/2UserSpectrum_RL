@@ -1,10 +1,12 @@
 # import libraries and classes
 from PGNN import *
 from multiprocessing import Pool, cpu_count
-import matplotlib.pyplot as plt
 import time
 import csv
 import os
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 
 
 class Evaluation:
@@ -15,8 +17,8 @@ class Evaluation:
         self.PGNNParaDict = PGNNParaDict
         self.t_total = time.time()
 
-    # main process
-    def Main(self):
+    # draw the results under different lambdas
+    def DrawRobustness(self):
         # display the number of available CPUs
         print('==========')
         print('# of CPUs: ', cpu_count())
