@@ -27,21 +27,11 @@ class PUPGNN:
     def Main(self):
         # construct neural network model
         model = Sequential()
-        # model.add(Dense(self.H, activation='relu', input_dim=3 * self.L))
-        # model.add(Dense(1, activation='sigmoid'))
-        # opt = Opt.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-        # model.compile(loss=self.PGLoss,
-        #               optimizer=opt)
-
-        testW = []
-        testW.append(np.array([[0], [0], [0], [0], [0], [0]]))
-        testW.append(np.array([0]))
-        model.add(Dense(1, activation='sigmoid', input_dim=3 * self.L,
-                  weights=testW))
-        opt = Opt.SGD(lr=1e-2, decay=1e-6, momentum=0.9, nesterov=True)
+        model.add(Dense(self.H, activation='relu', input_dim=3 * self.L))
+        model.add(Dense(1, activation='sigmoid'))
+        opt = Opt.SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
         model.compile(loss=self.PGLoss,
-                      optimizer=opt)        
-
+                      optimizer=opt)
         # optimize the policy by training neural network
         for i in range(self.M):
             # initialize variables
@@ -60,7 +50,8 @@ class PUPGNN:
             # evaluate performance
             curMuSim = self.CalPerformance(model)
             self.unitMuSim.append(curMuSim)
-            print('batch = ', i, ', ',
+            print('lambda = ', self.systemParaDict['arrivalRate'], ', ',
+                  'batch = ', i, ', ',
                   'mu_sim = ', curMuSim, ',',
                   'total time = ', time.time() - self.t_unit, 's')
 
@@ -123,7 +114,7 @@ class PUPGNN:
 
     # evaluate performance
     def CalPerformance(self, model):
-        testTimes = 100
+        testTimes = 10
         testHorizon = 100
         successTimes = 0
         for i in range(testTimes):

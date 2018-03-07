@@ -1,12 +1,12 @@
 # import libraries and classes
 from PGNN import *
+from PUPGNN import *
 from multiprocessing import Pool, cpu_count
 import time
 import csv
 import os
 import matplotlib
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
 
 
 class Evaluation:
@@ -18,7 +18,24 @@ class Evaluation:
         self.t_total = time.time()
 
     # draw the results under different lambdas
-    def DrawRobustness(self):
+    def EvaConvergence(self):
+        # compute the convergence data
+        PUPGNNObj = PUPGNN(self.systemParaDict, self.PGNNParaDict)
+        PUPGNNObj.Main()
+        # save results to files
+        fileName = 'Conv_lam' + str(self.systemParaDict['arrivalRate']) +\
+                   'H' + str(self.PGNNParaDict['historyLength']) +\
+                   '_R' + str(self.PGNNParaDict['hiddenNeuronNum']) +\
+                   '_N' + str(self.PGNNParaDict['batchSize']) +\
+                   '_M' + str(self.PGNNParaDict['iterationTime'])
+        os.chdir('Results')
+        with open(fileName + '.csv', "w") as file:
+            writer = csv.writer(file, delimiter=',')
+            writer.writerow(PUPGNNObj.unitMuSim)
+        os.chdir('..')
+
+    # draw the results under different lambdas
+    def EvaRobustness(self):
         # display the number of available CPUs
         print('==========')
         print('# of CPUs: ', cpu_count())
@@ -29,15 +46,6 @@ class Evaluation:
             self.SimREINFORCE_H2, range(100))
         self.originLowerBound = paraProcess.map(self.CalLowerBound, range(100))
         self.originUpperBound = paraProcess.map(self.CalUpperBound, range(100))
-        # plot results
-        fig, ax = plt.subplots()
-        xAxis = np.arange(0.0, 1.0, 0.01)
-        ax.plot(xAxis, self.simREINFORCE_H2)
-        ax.plot(xAxis, self.originLowerBound)
-        ax.plot(xAxis, self.originUpperBound)
-        ax.set(xlabel='$\lambda$', ylabel='$\mu^*$')
-        ax.grid()
-        # plt.show()
         # save results to files
         fileName = 'H' + str(self.PGNNParaDict['historyLength']) +\
                    '_R' + str(self.PGNNParaDict['hiddenNeuronNum']) +\
@@ -49,7 +57,6 @@ class Evaluation:
             writer.writerow(self.simREINFORCE_H2)
             writer.writerow(self.originLowerBound)
             writer.writerow(self.originUpperBound)
-        fig.savefig(fileName + '.eps')
         os.chdir('..')
 
     # simulate the result of H = 2 when applying REINFORCE
