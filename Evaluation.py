@@ -24,7 +24,7 @@ class Evaluation:
         PUPGNNObj.Main()
         # save results to files
         fileName = 'Conv_lam' + str(self.systemParaDict['arrivalRate']) +\
-                   'H' + str(self.PGNNParaDict['historyLength']) +\
+                   '_H' + str(self.PGNNParaDict['historyLength']) +\
                    '_R' + str(self.PGNNParaDict['hiddenNeuronNum']) +\
                    '_N' + str(self.PGNNParaDict['batchSize']) +\
                    '_M' + str(self.PGNNParaDict['iterationTime'])

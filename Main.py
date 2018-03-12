@@ -24,7 +24,6 @@ PGNNParaDict['dicountFactor'] = 0.99  # discount factor for reward
 
 # evaluation function for parallel computation
 def unitEvaluation(lamIndex):
-    print(lamIndex)
     systemParaDict['arrivalRate'] = lamIndex / 10
     EvalObj = Evaluation(systemParaDict, PGNNParaDict)
     EvalObj.EvaConvergence()
@@ -32,5 +31,5 @@ def unitEvaluation(lamIndex):
 
 # evaluate results
 if __name__ == '__main__':
-    paraProcess = Pool(4)
+    paraProcess = Pool(9)
     paraProcess.map(unitEvaluation, range(1, 10))

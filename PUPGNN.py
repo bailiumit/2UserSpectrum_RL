@@ -29,7 +29,7 @@ class PUPGNN:
         model = Sequential()
         model.add(Dense(self.H, activation='relu', input_dim=3 * self.L))
         model.add(Dense(1, activation='sigmoid'))
-        opt = Opt.SGD(lr=1e-4, decay=1e-6, momentum=0.9, nesterov=True)
+        opt = Opt.SGD(lr=1e-3, decay=1e-6, momentum=0.9, nesterov=True)
         model.compile(loss=self.PGLoss,
                       optimizer=opt)
         # optimize the policy by training neural network
@@ -114,8 +114,8 @@ class PUPGNN:
 
     # evaluate performance
     def CalPerformance(self, model):
-        testTimes = 10
-        testHorizon = 100
+        testTimes = 100
+        testHorizon = 500
         successTimes = 0
         for i in range(testTimes):
             # initialize variable

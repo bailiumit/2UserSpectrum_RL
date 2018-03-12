@@ -56,7 +56,7 @@ def CalUpperBoundAssist(y, lam):
 
 
 # Import training results
-os.chdir('Results')
+os.chdir('Results/Convergence')
 with open('H1_R1_N100_M200.csv', "r") as file1:
     reader1 = csv.reader(file1)
     row1 = next(reader1)
@@ -82,23 +82,61 @@ for i in range(100):
     H0.append(CalH0(i))
 
 
-# plot results
+# # plot results
+# xAxis = np.arange(0.0, 1.0, 0.01)
+# fig = plt.figure(figsize=(12, 9))
+# ax = fig.gca()
+# ax.plot(xAxis, originLowerBound, '--', c='#2C3E50', linewidth=1.5)
+# ax.plot(xAxis, originUpperBound, '--', c='#7F8C8D', linewidth=1.5)
+# ax.plot(xAxis, H0, '#E74C3C', linewidth=2)
+# ax.plot(xAxis, H1_R1_N100_M200, '#F39C12', linewidth=2)
+# ax.plot(xAxis, H3_R10_N200_M200, '#27AE60', linewidth=2)
+# ax.plot(xAxis, H10_R10_N200_M200, '#2980B9', linewidth=2)
+# ax.tick_params(labelsize=16)
+# ax.legend(['Original Lower Bound',
+#            'Original Upper Bound',
+#            '$H = 1$',
+#            '$H = 2$',
+#            '$H = 4$',
+#            '$H = 10$'])
+# ax.xaxis.set_minor_locator(MultipleLocator(0.1))
+# ax.yaxis.set_minor_locator(MultipleLocator(0.1))
+# ax.grid(which='minor', axis='both', linestyle='--')
+# plt.xlabel('$\lambda$', fontsize=16)
+# plt.ylabel('$\mu^*$', fontsize=16)
+# plt.xlim([0, 1])
+# plt.ylim([0, 1])
+# plt.show()
+
+# plot original bounds
 xAxis = np.arange(0.0, 1.0, 0.01)
-fig = plt.figure(figsize=(12, 9))
+fig = plt.figure(figsize=(6, 5))
 ax = fig.gca()
-ax.plot(xAxis, originLowerBound, '--', c='#2C3E50', linewidth=1.5)
-ax.plot(xAxis, originUpperBound, '--', c='#7F8C8D', linewidth=1.5)
-ax.plot(xAxis, H0, '#E74C3C', linewidth=2)
-ax.plot(xAxis, H1_R1_N100_M200, '#F39C12', linewidth=2)
-ax.plot(xAxis, H3_R10_N200_M200, '#27AE60', linewidth=2)
-ax.plot(xAxis, H10_R10_N200_M200, '#2980B9', linewidth=2)
+ax.plot(xAxis, H0, c='#9B59B6', linewidth=1.5)
+ax.plot(xAxis, originLowerBound, c='#2C3E50', linewidth=1.5)
+ax.plot(xAxis, originUpperBound, c='#7F8C8D', linewidth=1.5)
+ax.tick_params(labelsize=16)
+ax.legend(['New Lower Bound',
+           'Original Lower Bound',
+           'Original Upper Bound'])
+ax.xaxis.set_minor_locator(MultipleLocator(0.1))
+ax.yaxis.set_minor_locator(MultipleLocator(0.1))
+ax.grid(which='minor', axis='both', linestyle='--')
+plt.xlabel('$\lambda$', fontsize=16)
+plt.ylabel('$\mu^*$', fontsize=16)
+plt.xlim([0, 1])
+plt.ylim([0, 1])
+plt.show()
+
+# plot new bounds
+xAxis = np.arange(0.0, 1.0, 0.01)
+fig = plt.figure(figsize=(6, 5))
+ax = fig.gca()
+ax.plot(xAxis, originLowerBound, c='#2C3E50', linewidth=1.5)
+ax.plot(xAxis, originUpperBound, c='#7F8C8D', linewidth=1.5)
 ax.tick_params(labelsize=16)
 ax.legend(['Original Lower Bound',
-           'Original Upper Bound',
-           '$H = 1$',
-           '$H = 2$',
-           '$H = 4$',
-           '$H = 10$'])
+           'Original Upper Bound'])
 ax.xaxis.set_minor_locator(MultipleLocator(0.1))
 ax.yaxis.set_minor_locator(MultipleLocator(0.1))
 ax.grid(which='minor', axis='both', linestyle='--')
